@@ -1,0 +1,19 @@
+{
+  "name": "jkdbot",
+  "version": "1.0.0",
+  "description": "One of the many principles of JKD philosophy each day",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drexa1/jkdbot.git"
+  },
+  "author": "Diego Ruiz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/drexa1/jkdbot/issues"
+  },
+  "homepage": "https://github.com/drexa1/jkdbot#readme"
+}
