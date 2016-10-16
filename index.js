@@ -9,7 +9,7 @@ app.listen((process.env.PORT || 3000));
 
 // Server endpoint
 app.get('/', function (req, res) {
-    res.send('JKDbot here');
+    res.send('JKDbot here!');
 });
 
 // Facebook webhook
