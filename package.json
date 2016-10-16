@@ -11,9 +11,14 @@
     "url": "git+https://github.com/drexa1/jkdbot.git"
   },
   "author": "Diego Ruiz",
-  "license": "ISC",
+  "license": "Apache License, Version 2.0",
   "bugs": {
     "url": "https://github.com/drexa1/jkdbot/issues"
   },
-  "homepage": "https://github.com/drexa1/jkdbot#readme"
+  "homepage": "https://github.com/drexa1/jkdbot/blob/master/README.md",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "request": "^2.75.0"
+  }
 }
