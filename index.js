@@ -9,7 +9,7 @@ app.listen((process.env.PORT || 3000));
 
 // Server endpoint
 app.get('/', function (req, res) {
-    res.send('JKDbot here!');
+    res.send('JKDbot here! v.0.0.3');
 });
 
 // Facebook webhook
@@ -23,7 +23,7 @@ app.get('/webhook', function (req, res) {
 
 // Handler receiving messages
 app.post('/webhook', function (req, res) {
-    log.debug(req);
+    console.log(req);
     var events = req.body.entry[0].messaging;
     for (i = 0; i < events.length; i++) {
         var event = events[i];
