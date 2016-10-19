@@ -29,9 +29,15 @@ app.post('/webhook', function (req, res) {
         var event = events[i];
         if (event.message && event.message.text) {
             switch(event.message.text) {
-                case("cmd_subscribers"): sendMessage(event.sender.id, getPageSubscribers("123456789")); break;
-                case("cmd_timezone"): sendMessage(event.sender.id, getUserTimezone("1")); break;
-                default: sendMessage(event.sender.id, {text: "Message received: " + event.message.text}); break;
+                case("cmd_subscribers"): 
+                    sendMessage(event.sender.id, {text: getPageSubscribers("123456789")}); 
+                    break;
+                case("cmd_timezone"): 
+                    sendMessage(event.sender.id, {text: getUserTimezone("1")}); 
+                    break;
+                default: 
+                    sendMessage(event.sender.id, {text: "Message received: " + event.message.text});
+                    break;
             }
         }
     }
