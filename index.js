@@ -26,12 +26,15 @@ app.get('/webhook', function (req, res) {
 
 // Handler receiving messages
 app.post('/webhook', function (req, res) {
-    console.log(req);
     var events = req.body.entry[0].messaging;
     for (i = 0; i < events.length; i++) {
         var event = events[i];
         if (event.message && event.message.text) {
             switch(event.message.text) {
+                case("cmd_req"):
+                    console.log('cmd_req' + req.body);
+                    sendMessage(event.sender.id, {text: req.body}); 
+                    break;
                 case("cmd_version"): 
                     sendMessage(event.sender.id, {text: ver}); 
                     break;
