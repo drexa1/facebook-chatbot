@@ -23,18 +23,23 @@ app.get('/webhook', function (req, res) {
 
 // Handler receiving messages
 app.post('/webhook', function (req, res) {
+    log.debug(req);
     var events = req.body.entry[0].messaging;
     for (i = 0; i < events.length; i++) {
         var event = events[i];
         if (event.message && event.message.text) {
-            sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
+            switch(event.message.text) {
+                case("cmd_subscribers"): sendMessage(event.sender.id, getPageSubscribers("123456789")); break;
+                case("cmd_timezone"): sendMessage(event.sender.id, getUserTimezone("1")); break;
+                default: sendMessage(event.sender.id, {text: "Message received: " + event.message.text}); break;
+            }
         }
     }
     res.sendStatus(200);
 });
 
-// Function sending messages
-function sendMessage(recipientId, message) {
+// Sends a message to a Facebook user
+var sendMessage = function(recipientId, message) {
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
@@ -50,4 +55,14 @@ function sendMessage(recipientId, message) {
             console.log('Error: ', response.body.error);
         }
     });
+};
+
+// Returns the subscribers of a page
+var getPageSubscribers = function(pageId) {
+    return "1, 2, 4";
+};
+
+// Returns the timezone of a user
+var getPageSubscribers = function(userId) {
+    return "-9";
 };
