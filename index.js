@@ -7,9 +7,12 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.listen((process.env.PORT || 3000));
 
+// Current version
+ver = 'v.0.0.4';
+
 // Server endpoint
 app.get('/', function (req, res) {
-    res.send('JKDbot here! v.0.0.3');
+    res.send('JKDbot here! ' + ver);
 });
 
 // Facebook webhook
@@ -29,6 +32,9 @@ app.post('/webhook', function (req, res) {
         var event = events[i];
         if (event.message && event.message.text) {
             switch(event.message.text) {
+                case("cmd_version"): 
+                    sendMessage(event.sender.id, {text: ver}); 
+                    break;
                 case("cmd_subscribers"): 
                     sendMessage(event.sender.id, {text: getPageSubscribers("123456789")}); 
                     break;
