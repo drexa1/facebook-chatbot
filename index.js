@@ -8,7 +8,10 @@ app.use(bodyParser.json());
 app.listen((process.env.PORT || 3000));
 
 // Current version
-ver = 'v.0.0.4';
+ver = 'v.0.0.5';
+
+// Facebook pageId
+pageId = '1167308473348175';
 
 // Server endpoint
 app.get('/', function (req, res) {
@@ -31,15 +34,11 @@ app.post('/webhook', function (req, res) {
         var event = events[i];
         if (event.message && event.message.text) {
             switch(event.message.text) {
-                case("cmd_req"):
-                    console.log('cmd_req' + req.body);
-                    sendMessage(event.sender.id, {text: req.body}); 
-                    break;
                 case("cmd_version"): 
                     sendMessage(event.sender.id, {text: ver}); 
                     break;
                 case("cmd_subscribers"): 
-                    sendMessage(event.sender.id, {text: getPageSubscribers("123456789")}); 
+                    sendMessage(event.sender.id, {text: getPageSubscribers(pageId)}); 
                     break;
                 case("cmd_timezone"): 
                     sendMessage(event.sender.id, {text: getUserTimezone("1")}); 
@@ -56,7 +55,7 @@ app.post('/webhook', function (req, res) {
 // Sends a message to a Facebook user
 var sendMessage = function(recipientId, message) {
     request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
+        url: 'https://graph.facebook.com/v2.8/me/messages',
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
         method: 'POST',
         json: {
@@ -74,7 +73,17 @@ var sendMessage = function(recipientId, message) {
 
 // Returns the subscribers of a page
 var getPageSubscribers = function(pageId) {
-    return "1, 2, 4";
+    request({
+        url: 'https://graph.facebook.com/v2.8/'+pageId+'/likes',
+        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+        method: 'GET'
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error retrieving page subscribers: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        }
+    });
 };
 
 // Returns the timezone of a user
