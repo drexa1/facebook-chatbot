@@ -78,6 +78,6 @@ var getPageSubscribers = function(pageId) {
 };
 
 // Returns the timezone of a user
-var getPageSubscribers = function(userId) {
+var getUserTimezone = function(userId) {
     return "-9";
 };
