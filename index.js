@@ -38,7 +38,7 @@ app.post('/webhook', function (req, res) {
                     sendMessage(event.sender.id, {text: ver}); 
                     break;
                 case("cmd_subscribers"): 
-                    sendMessage(event.sender.id, {text: getPageSubscribers(pageId)}); 
+                    sendMessage(event.sender.id, {text: getUserIds()}); 
                     break;
                 case("cmd_timezone"): 
                     sendMessage(event.sender.id, {text: getUserTimezone("1")}); 
@@ -71,22 +71,38 @@ var sendMessage = function(recipientId, message) {
     });
 };
 
-// Returns the subscribers of a page
-var getPageSubscribers = function(pageId) {
+// Collects the userId's from the likes page
+var getUserIds = function() {
+    var pageLikesDocument = getPageLikesDocument();
+    console.log(likesPage);
+    
+    /*
+    var userIds = ""; 
+    Array.prototype.forEach.call(document.querySelectorAll('a[data-gt]'), function(a){ 
+        var gt = JSON.parse(a.dataset.gt); 
+        if(!gt.engagement || gt.engagement.eng_type !== "1") 
+            return; 
+        userIds += a.innerHTML + ': ' + gt.engagement.eng_tid + "\n"; 
+    }); 
+    console.log(userIds);
+    */
+}
+
+// Retrieves the page with the likes of a page
+var getPageLikesDocument = function() {
     request({
-        url: 'https://graph.facebook.com/v2.8/'+pageId+'/likes',
-        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+        url: 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId,
         method: 'GET'
     }, function(error, response, body) {
         if (error) {
-            console.log('Error retrieving page subscribers: ', error);
+            console.log('Error retrieving page likes: ', error);
         } else if (response.body.error) {
             console.log('Error: ', response.body.error);
         }
     });
 };
 
-// Returns the timezone of a user
+// Retrieves the timezone of a user
 var getUserTimezone = function(userId) {
     return "-9";
 };
