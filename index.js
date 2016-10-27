@@ -74,7 +74,7 @@ var sendMessage = function(recipientId, message) {
 // Collects the userId's from the likes page
 var getUserIds = function() {
     var pageLikesDocument = getPageLikesDocument();
-    console.log(likesPage);
+    console.log(pageLikesDocument);
     
     /*
     var userIds = ""; 
