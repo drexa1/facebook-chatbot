@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 app.listen((process.env.PORT || 3000));
 
 // Current version
-ver = 'v.0.0.5';
+ver = 'v.0.0.6';
 
 // Facebook pageId
 pageId = '1167308473348175';
