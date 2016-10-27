@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 app.listen((process.env.PORT || 3000));
 
 // Current version
-ver = 'v.0.0.6';
+ver = 'v.0.0.7';
 
 // Facebook pageId
 pageId = '1167308473348175';
@@ -86,6 +86,7 @@ var getUserIds = function() {
     }); 
     console.log(userIds);
     */
+    return "getUserIds by log";
 }
 
 // Retrieves the page with the likes of a page
