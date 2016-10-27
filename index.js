@@ -1,17 +1,19 @@
 var express = require('express');
-var bodyParser = require('body-parser');
 var request = require('request');
-var app = express();
+var bodyParser = require('body-parser');
+var cheerio = require('cheerio');
 
+var app = express();
+app.listen((process.env.PORT || 3000));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.listen((process.env.PORT || 3000));
 
 // Current version
-ver = 'v.0.0.7';
-
+ver = 'v.0.0.8';
 // Facebook pageId
 pageId = '1167308473348175';
+// My user on Facebook
+me = '100000522710505';
 
 // Server endpoint
 app.get('/', function (req, res) {
@@ -62,7 +64,7 @@ var sendMessage = function(recipientId, message) {
             recipient: {id: recipientId},
             message: message,
         }
-    }, function(error, response, body) {
+    }, function(error, response, html) {
         if (error) {
             console.log('Error sending message: ', error);
         } else if (response.body.error) {
@@ -71,34 +73,21 @@ var sendMessage = function(recipientId, message) {
     });
 };
 
-// Collects the userId's from the likes page
+// Collects the userId's from the page likes html
 var getUserIds = function() {
-    var pageLikesDocument = getPageLikesDocument();
-    console.log(pageLikesDocument);
-    
-    /*
-    var userIds = ""; 
-    Array.prototype.forEach.call(document.querySelectorAll('a[data-gt]'), function(a){ 
-        var gt = JSON.parse(a.dataset.gt); 
-        if(!gt.engagement || gt.engagement.eng_type !== "1") 
-            return; 
-        userIds += a.innerHTML + ': ' + gt.engagement.eng_tid + "\n"; 
-    }); 
-    console.log(userIds);
-    */
-    return "getUserIds by log";
-}
-
-// Retrieves the page with the likes of a page
-var getPageLikesDocument = function() {
+    var userIds = [];
     request({
-        url: 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId,
-        method: 'GET'
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error retrieving page likes: ', error);
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
+        uri: 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId,
+    }, function(error, response, html) {
+        if (!error && response.statusCode == 200) {
+            var $ = cheerio.load(html);
+            $('a[data-gt]').each(function(i, a){
+                var gt = JSON.parse(a.dataset.gt); 
+                if(!gt.engagement || gt.engagement.eng_type !== "1") {
+                    return; 
+                }
+                userIds.push(gt.engagement.eng_tid)
+            });
         }
     });
 };
