@@ -120,12 +120,12 @@ var getUserIds = function(){
 
 // Retrieves the timezone of a user
 function getUserTimezone(userId){
-    var userTimezone = getUserAttributes(userId).then(function (res){
+    return userTimezone = getUserAttributes(userId).then(function (res){
+        console.log('getUserTimezone: ' + res.timezone);
         return res.timezone;
     }, function(error) {
         console.error("Promise failed:", error);
     });
-    return userTimezone;
 }
 
 // Retrieves the profile attributes of a user
