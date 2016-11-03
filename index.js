@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.9';
+ver = 'v.0.0.10';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -73,8 +73,19 @@ var sendMessage = function(recipientId, message) {
     });
 };
 
+// Facebook page with the likes of our app
+var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId;
 // Collects the userId's from the page likes html
-var getUserIds = function() {
+var getUserIds = function() {    
+    request(url, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+        var $ = cheerio.load(body);
+        console.log(body);
+    } else {
+        console.log('Error retrieving likes: ', error);
+    }
+});
+    /*
     var userIds = [];
     request({
         uri: 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId,
@@ -91,6 +102,7 @@ var getUserIds = function() {
             });
         }
     });
+    */
 };
 
 // Retrieves the timezone of a user
