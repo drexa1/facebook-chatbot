@@ -122,12 +122,14 @@ function getUserTimezone(userId){
     return getUserAttributes(userId).then(function (res){
         console.log('***1' + res.timezone);
         return res.timezone;
+    }, function(error) {
+        console.error("Promise failed!", error);
     });
 }
 
 // Retrieves the profile attributes of a user
 var getUserAttributes = function(userId){
-    return new Promise(function (fulfill, reject){
+    return new Promise(function (resolve, reject){
         request({
             url: 'https://graph.facebook.com/v2.8/' + userId,
             qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
@@ -141,7 +143,7 @@ var getUserAttributes = function(userId){
                 reject(response.body.error);
             }
             var userAttributes = JSON.parse(response.body);
-            fulfill(userAttributes);
+            resolve(userAttributes);
         });  
     });
 };
