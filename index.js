@@ -46,8 +46,8 @@ app.post('/webhook', function (req, res){
                     break;
                 case("cmd_timezone"): 
                     var userTimezone = getUserTimezone(event.sender.id);
-                    console.log('***2' + userTimezone);
-                    sendMessage(event.sender.id, {text: userTimezone}); 
+                    console.log('***2   ' + userTimezone);
+                    sendMessage(event.sender.id, {text: "Timezone " + userTimezone}); 
                     break;
                 case("cmd_stop_cron"): 
                     task.stop();
@@ -121,7 +121,7 @@ var getUserIds = function(){
 // Retrieves the timezone of a user
 function getUserTimezone(userId){
     return getUserAttributes(userId).then(function (res){
-        console.log('***1' + res.timezone);
+        console.log('***1     ' + res.timezone);
         return res.timezone;
     }, function(error) {
         console.error("Promise failed:", error);
@@ -143,8 +143,8 @@ var getUserAttributes = function(userId){
                 console.log('Error: ', response.body.error);
                 reject(response.body.error);
             }
-            var userAttributes = JSON.parse(response.body);
-            resolve(userAttributes);
+            var res = JSON.parse(response.body);
+            resolve(res);
         });  
     });
 };
