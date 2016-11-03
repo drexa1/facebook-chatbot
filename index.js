@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.14';
+ver = 'v.0.0.15';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -46,6 +46,9 @@ app.post('/webhook', function (req, res) {
                 case("cmd_timezone"): 
                     sendMessage(event.sender.id, {text: getUserTimezone("1")}); 
                     break;
+              case("cmd_stop_cron"): 
+                    task.stop();
+                    break;
                 default: 
                     sendMessage(event.sender.id, {text: "Message received: " + event.message.text + " by " + event.sender.id});
                     break;
@@ -56,11 +59,11 @@ app.post('/webhook', function (req, res) {
 });
 
 // Scheduler
-var job = cron.job('*/2 * * * *', function() {
+var task = cron.schedule('*/2 * * * *', function() {
     console.log('Running sendout');
     doSendout();
 });
-job.start();
+task.start();
 
 // Main task
 var doSendout = function() {
