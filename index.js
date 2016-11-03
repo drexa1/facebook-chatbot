@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.12';
+ver = 'v.0.0.13';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -56,10 +56,11 @@ app.post('/webhook', function (req, res) {
 });
 
 // Scheduler
-cron.schedule('*/2 * * * *', function() {
+var job = cron.job('*/2 * * * *', function() {
     console.log('Running sendout');
     doSendout();
 });
+job.start();
 
 // Main task
 var doSendout = function() {
