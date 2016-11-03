@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.15';
+ver = 'v.0.0.16';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -62,7 +62,7 @@ app.post('/webhook', function (req, res) {
 });
 
 // Scheduler
-var task = cron.schedule('*/2 * * * *', function() {
+var task = cron.schedule('* * 9 * *', function() {
     console.log('Running sendout');
     doSendout();
 });
@@ -70,7 +70,7 @@ task.start();
 
 // Main task
 var doSendout = function() {
-    sendMessage(me, {text: "jkdbot here"}); 
+    sendMessage(me, {text: "jkdbot here"});
 }
 
 // Sends a message to a Facebook user
