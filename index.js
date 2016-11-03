@@ -10,19 +10,19 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.22';
+ver = 'v.0.0.23';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
 me = '1221242727898531';
 
 // Server endpoint
-app.get('/', function (req, res) {
+app.get('/', function (req, res){
     res.send('JKDbot here! ' + ver);
 });
 
 // Facebook webhook
-app.get('/webhook', function (req, res) {
+app.get('/webhook', function (req, res){
     if (req.query['hub.verify_token'] === 'jkdbot_verify_token') {
         res.send(req.query['hub.challenge']);
     } else {
@@ -31,9 +31,9 @@ app.get('/webhook', function (req, res) {
 });
 
 // Handler receiving messages
-app.post('/webhook', function (req, res) {
+app.post('/webhook', function (req, res){
     var events = req.body.entry[0].messaging;
-    for (i = 0; i < events.length; i++) {
+    for (i = 0; i < events.length; i++){
         var event = events[i];
         if (event.message && event.message.text) {
             switch(event.message.text) {
@@ -66,19 +66,19 @@ app.post('/webhook', function (req, res) {
 });
 
 // Scheduler
-var task = cron.schedule('* * 9 * *', function() {
+var task = cron.schedule('* * 9 * *', function(){
     console.log('Running sendout');
     doSendout();
 });
 task.start();
 
 // Main task
-var doSendout = function() {
+var doSendout = function(){
     sendMessage(me, {text: "jkdbot here" + ver});
 }
 
 // Sends a message to a Facebook user
-var sendMessage = function(recipientId, message) {
+var sendMessage = function(recipientId, message){
     request({
         url: 'https://graph.facebook.com/v2.8/me/messages',
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
@@ -99,7 +99,7 @@ var sendMessage = function(recipientId, message) {
 // Facebook page with the likes of our app
 var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId;
 // Collects the userId's from the page likes html
-var getUserIds = function() { 
+var getUserIds = function(){ 
     var userIds = [];
     request(url, function (error, response, html) {
     if (!error && response.statusCode == 200) {
@@ -120,12 +120,12 @@ var getUserIds = function() {
 
 function getUserAttribute(userId){
     var userData = getUserData(userId).then(JSON.parse);
-    console.log('***1' + userData);
-    return userData;
+    console.log('***1' + userData.timezone);
+    return userData.timezone;
 }
 
 // Retrieves the profile attributes of a user
-var getUserData = function(userId) {
+var getUserData = function(userId){
     return new Promise(function (fulfill, reject) {        
         request({
             url: 'https://graph.facebook.com/v2.8/' + userId,
@@ -140,6 +140,7 @@ var getUserData = function(userId) {
                 reject(response.body.error);
             }
             // var userAttributes = JSON.parse(response.body);
+            console.log('***0' + response);
             fulfill(response);
         });  
     });
