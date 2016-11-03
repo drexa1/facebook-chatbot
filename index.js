@@ -37,6 +37,7 @@ app.post('/webhook', function (req, res) {
         var event = events[i];
         if (event.message && event.message.text) {
             switch(event.message.text) {
+                // Housekeeping commands
                 case("cmd_version"): 
                     sendMessage(event.sender.id, {text: ver}); 
                     break;
@@ -44,16 +45,19 @@ app.post('/webhook', function (req, res) {
                     sendMessage(event.sender.id, {text: getUserIds()}); 
                     break;
                 case("cmd_timezone"): 
-                    sendMessage(event.sender.id, {text: getUserTimezone(event.sender.id)}); 
+                    var userTimezone = getUserTimezone(event.sender.id);
+                    console.log('***2 ' + userTimezone);
+                    sendMessage(event.sender.id, {text: userTimezone}); 
                     break;
               case("cmd_stop_cron"): 
                     task.stop();
                     break;
               case("cmd_stop_restart"): 
                     task.start();
-                    break;                    
+                    break;  
+                // Echo to me
                 default: 
-                    sendMessage(event.sender.id, {text: "Message received: " + event.message.text + " by " + event.sender.id});
+                    sendMessage(me, {text: "Message received: " + event.message.text + " by " + event.sender.id});
                     break;
             }
         }
@@ -70,7 +74,7 @@ task.start();
 
 // Main task
 var doSendout = function() {
-    sendMessage(me, {text: "jkdbot here"});
+    sendMessage(me, {text: "jkdbot here" + ver});
 }
 
 // Sends a message to a Facebook user
@@ -127,6 +131,7 @@ var getUserTimezone = function(userId) {
             console.log('Error: ', response.body.error);
         }
         var res = JSON.parse(response.body)
+        console.log('***1 ' + res.timezone);
         return res.timezone;
     });
 };
