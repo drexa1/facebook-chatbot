@@ -4,7 +4,7 @@
   "description": "One of the many principles of JKD philosophy each day",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -18,11 +18,9 @@
   "homepage": "https://github.com/drexa1/jkdbot/blob/master/README.md",
   "dependencies": {
     "body-parser": "latest",
+    "cheerio": "latest",
     "express": "latest",
-    "request": "latest",
-    "cheerio": "latest"
-  },
-  "scripts": {
-    "start": "node index.js"
+    "node-cron": "^1.1.2",
+    "request": "latest"
   }
 }

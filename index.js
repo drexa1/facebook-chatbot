@@ -1,6 +1,7 @@
 var express = require('express');
 var request = require('request');
 var bodyParser = require('body-parser');
+var cron = require('node-cron');
 var cheerio = require('cheerio');
 
 var app = express();
@@ -9,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.10';
+ver = 'v.0.0.12';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -54,6 +55,17 @@ app.post('/webhook', function (req, res) {
     res.sendStatus(200);
 });
 
+// Scheduler
+cron.schedule('*/2 * * * *', function() {
+    console.log('Running sendout');
+    doSendout();
+});
+
+// Main task
+var doSendout = function() {
+    sendMessage(me, {text: "jkdbot here"}); 
+}
+
 // Sends a message to a Facebook user
 var sendMessage = function(recipientId, message) {
     request({
@@ -76,33 +88,23 @@ var sendMessage = function(recipientId, message) {
 // Facebook page with the likes of our app
 var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId;
 // Collects the userId's from the page likes html
-var getUserIds = function() {    
+var getUserIds = function() { 
+    var userIds = [];
     request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
         var $ = cheerio.load(body);
-        console.log(body);
+        $('a[data-gt]').each(function(i, a) {
+            var gt = JSON.parse(a.dataset.gt); 
+            if(!gt.engagement || gt.engagement.eng_type !== "1") {
+                return; 
+            }
+            console.log(gt.engagement.eng_tid);
+            userIds.push(gt.engagement.eng_tid)
+        });
     } else {
         console.log('Error retrieving likes: ', error);
     }
-});
-    /*
-    var userIds = [];
-    request({
-        uri: 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId,
-    }, function(error, response, html) {
-        if (!error && response.statusCode == 200) {
-            console.log('*** '+html)
-            var $ = cheerio.load(html);
-            $('a[data-gt]').each(function(i, a){
-                var gt = JSON.parse(a.dataset.gt); 
-                if(!gt.engagement || gt.engagement.eng_type !== "1") {
-                    return; 
-                }
-                userIds.push(gt.engagement.eng_tid)
-            });
-        }
     });
-    */
 };
 
 // Retrieves the timezone of a user
