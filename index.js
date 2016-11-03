@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.20';
+ver = 'v.0.0.21';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -127,6 +127,6 @@ var getUserTimezone = function(userId) {
             console.log('Error: ', response.body.error);
         }
         var res = JSON.parse(response.body)
-        console.log('***7 ' + res.timezone);
+        return res.timezone;
     });
 };
