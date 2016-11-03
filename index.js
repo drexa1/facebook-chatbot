@@ -49,15 +49,15 @@ app.post('/webhook', function (req, res){
                     console.log('***2 ' + userTimezone);
                     sendMessage(event.sender.id, {text: userTimezone}); 
                     break;
-              case("cmd_stop_cron"): 
+                case("cmd_stop_cron"): 
                     task.stop();
                     break;
-              case("cmd_stop_restart"): 
+                case("cmd_stop_restart"): 
                     task.start();
                     break;  
-                // Echo to me
+                // Ack to sender
                 default: 
-                    sendMessage(me, {text: "Message received: " + event.message.text + " by " + event.sender.id});
+                    sendMessage(event.sender.id, {text: "Message received: " + event.message.text + " by " + event.sender.id});
                     break;
             }
         }
