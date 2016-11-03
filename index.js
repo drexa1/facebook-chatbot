@@ -126,6 +126,6 @@ var getUserTimezone = function(userId) {
         } else if (response.body.error) {
             console.log('Error: ', response.body.error);
         }
-        console.log('***1 ' + response.body["timezone"]);
+        console.log('***2 ' + response.body.timezone);
     });
 };
