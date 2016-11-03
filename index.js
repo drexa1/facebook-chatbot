@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.21';
+ver = 'v.0.0.22';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -45,7 +45,7 @@ app.post('/webhook', function (req, res) {
                     sendMessage(event.sender.id, {text: getUserIds()}); 
                     break;
                 case("cmd_timezone"): 
-                    var userTimezone = getUserTimezone(event.sender.id);
+                    var userTimezone = getUserAttribute(event.sender.id);
                     console.log('***2 ' + userTimezone);
                     sendMessage(event.sender.id, {text: userTimezone}); 
                     break;
@@ -118,20 +118,31 @@ var getUserIds = function() {
     });
 };
 
-// Retrieves the timezone of a user
-var getUserTimezone = function(userId) {
-    request({
-        url: 'https://graph.facebook.com/v2.8/' + userId,
-        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
-        method: 'GET'
-    }, function(error, response, html) {
-        if (error) {
-            console.log('Error sending message: ', error);
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
-        }
-        var res = JSON.parse(response.body)
+function getUserAttribute(userId){
+    var userData = getUserData(userId).then(JSON.parse);
+    console.log('***1' + userData);
+    return userData;
+}
+
+// Retrieves the profile attributes of a user
+var getUserData = function(userId) {
+    return new Promise(function (fulfill, reject) {        
+        request({
+            url: 'https://graph.facebook.com/v2.8/' + userId,
+            qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+            method: 'GET'
+        }, function(error, response, html) {
+            if (error) {
+                console.log('Error sending message: ', error);
+                reject(error);
+            } else if (response.body.error) {
+                console.log('Error: ', response.body.error);
+                reject(response.body.error);
+            }
+            // var userAttributes = JSON.parse(response.body);
+            fulfill(response);
+        });  
     });
-    console.log('*** ' + res.timezone);
-    return res.timezone;
 };
+
+
