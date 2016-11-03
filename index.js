@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.17';
+ver = 'v.0.0.18';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
