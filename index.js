@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.23';
+ver = 'v.0.0.24';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -45,8 +45,8 @@ app.post('/webhook', function (req, res){
                     sendMessage(event.sender.id, {text: getUserIds()}); 
                     break;
                 case("cmd_timezone"): 
-                    var userTimezone = getUserAttribute(event.sender.id);
-                    console.log('***2 ' + userTimezone);
+                    var userTimezone = getUserTimezone(event.sender.id);
+                    console.log('***2' + userTimezone);
                     sendMessage(event.sender.id, {text: userTimezone}); 
                     break;
                 case("cmd_stop_cron"): 
@@ -118,14 +118,15 @@ var getUserIds = function(){
     });
 };
 
-function getUserAttribute(userId){
-    var userData = getUserData(userId).then(JSON.parse);
-    console.log('***1' + userData.timezone);
-    return userData.timezone;
+function getUserTimezone(userId){
+    return getUserAttributes(userId).then(function (res){
+        console.log('***1' + res);
+        return res.timezone;
+    });
 }
 
 // Retrieves the profile attributes of a user
-var getUserData = function(userId){
+var getUserAttributes = function(userId){
     return new Promise(function (fulfill, reject) {        
         request({
             url: 'https://graph.facebook.com/v2.8/' + userId,
@@ -141,7 +142,7 @@ var getUserData = function(userId){
             }
             // var userAttributes = JSON.parse(response.body);
             console.log('***0' + response);
-            fulfill(response);
+            fulfill(JSON.parse(response.body));
         });  
     });
 };
