@@ -80,7 +80,7 @@ var getUserIds = function() {
         uri: 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId,
     }, function(error, response, html) {
         if (!error && response.statusCode == 200) {
-            console.log('*** '=html)
+            console.log('*** '+html)
             var $ = cheerio.load(html);
             $('a[data-gt]').each(function(i, a){
                 var gt = JSON.parse(a.dataset.gt); 
