@@ -14,7 +14,7 @@ ver = 'v.0.0.15';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
-me = '100000522710505';
+me = '1221242727898531';
 
 // Server endpoint
 app.get('/', function (req, res) {
@@ -49,6 +49,9 @@ app.post('/webhook', function (req, res) {
               case("cmd_stop_cron"): 
                     task.stop();
                     break;
+              case("cmd_stop_restart"): 
+                    task.start();
+                    break;                    
                 default: 
                     sendMessage(event.sender.id, {text: "Message received: " + event.message.text + " by " + event.sender.id});
                     break;
