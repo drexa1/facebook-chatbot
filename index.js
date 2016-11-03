@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.16';
+ver = 'v.0.0.17';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -44,7 +44,7 @@ app.post('/webhook', function (req, res) {
                     sendMessage(event.sender.id, {text: getUserIds()}); 
                     break;
                 case("cmd_timezone"): 
-                    sendMessage(event.sender.id, {text: getUserTimezone("1")}); 
+                    sendMessage(event.sender.id, {text: getUserTimezone(event.sender.id)}); 
                     break;
               case("cmd_stop_cron"): 
                     task.stop();
@@ -97,9 +97,9 @@ var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId;
 // Collects the userId's from the page likes html
 var getUserIds = function() { 
     var userIds = [];
-    request(url, function (error, response, body) {
+    request(url, function (error, response, html) {
     if (!error && response.statusCode == 200) {
-        var $ = cheerio.load(body);
+        var $ = cheerio.load(html);
         $('a[data-gt]').each(function(i, a) {
             var gt = JSON.parse(a.dataset.gt); 
             if(!gt.engagement || gt.engagement.eng_type !== "1") {
@@ -116,5 +116,16 @@ var getUserIds = function() {
 
 // Retrieves the timezone of a user
 var getUserTimezone = function(userId) {
-    return "-9";
+    request({
+        url: 'https://graph.facebook.com/v2.8/' + userId,
+        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+        method: 'GET'
+    }, function(error, response, html) {
+        if (error) {
+            console.log('Error sending message: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        }
+        console.log(response);
+    });
 };
