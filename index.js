@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.8';
+ver = 'v.0.0.9';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -80,6 +80,7 @@ var getUserIds = function() {
         uri: 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId,
     }, function(error, response, html) {
         if (!error && response.statusCode == 200) {
+            console.log('*** '=html)
             var $ = cheerio.load(html);
             $('a[data-gt]').each(function(i, a){
                 var gt = JSON.parse(a.dataset.gt); 
