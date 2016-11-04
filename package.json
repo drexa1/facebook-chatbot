@@ -18,7 +18,6 @@
   "homepage": "https://github.com/drexa1/jkdbot/blob/master/README.md",
   "dependencies": {
     "body-parser": "latest",
-    "cheerio": "latest",
     "express": "latest",
     "node-cron": "latest",
     "nightmare": "latest",

@@ -2,7 +2,6 @@ var express = require('express');
 var request = require('request');
 var bodyParser = require('body-parser');
 var cron = require('node-cron');
-var cheerio = require('cheerio');
 var Nightmare = require('nightmare');
 
 var app = express();
@@ -11,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.32';
+ver = 'v.0.0.33';
 
 // Server endpoint
 app.get('/', function (req, res){
@@ -97,25 +96,36 @@ var sendMessage = function(recipientId, message){
 // Scraps the userId's from the page likes html
 var getUserIds = function(){ 
     var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+process.env.PAGE_ID;
-    console.log(url);
-    var nightmare = new Nightmare({ show: false });
+    var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+1167308473348175;
+    var nightmare = new Nightmare({show: true});
     var page = nightmare.goto(url)
-        .type('#email', 'drexa1@hotmail.com')
-        .type('#pass', process.env.USER_ACCESS_TOKEN)
+        .insert('#email', 'drexa1@hotmail.com')
+        .insert('#pass', process.env.USER_ACCESS_TOKEN)
+        .insert('#pass', 'gatito?(&)')
         .click('#loginbutton')
-        .wait()
-        .evaluate(function () {
-            console.log('**********doing shit');            
-            return document.querySelectorAll('.fsl');
+    
+        .evaluate(function (){
+            if(document.body.innerHTML)
+                return document.body.innerHTML;
+            else
+                return "Not in page";
         })
-        .end()
+        .run(function (error, result){
+            if (error) {
+                return console.log(error);
+            }
+            console.log(result);
+            console.log('Done!');
+        }
+    );
+    
+    /*
+        .evaluate(function () {    
+            return document.querySelector('body').innerHTML;
+        })
         .then(function (result) {
-            console.log(result)
-        })
-        .catch(function (error) {
-            console.error('Search failed:', error);
-        });
-    console.log('Nightmare done');
+            console.log(result); 
+        });*/
 };
 
 // Retrieves the profile attributes of a user
