@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.27';
+ver = 'v.0.0.28';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -45,7 +45,7 @@ app.post('/webhook', function (req, res){
                     sendMessage(event.sender.id, {text: getUserIds()}); 
                     break;
                 case("cmd_timezone"): 
-                    getUserAttributes(userId).then(function(res){
+                    getUserAttributes(event.sender.id).then(function(res){
                         console.error("************cmd ", res.timezone);
                     });                                        
                     sendMessage(event.sender.id, {text: "Timezone " }); 
