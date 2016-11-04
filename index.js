@@ -3,6 +3,7 @@ var request = require('request');
 var bodyParser = require('body-parser');
 var cron = require('node-cron');
 var cheerio = require('cheerio');
+var casper = require('casper').create();
 
 var app = express();
 app.listen((process.env.PORT || 3000));
@@ -10,7 +11,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.28';
+ver = 'v.0.0.29';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -19,6 +20,7 @@ me = '1221242727898531';
 // Server endpoint
 app.get('/', function (req, res){
     res.send('JKDbot here! ' + ver);
+    getUserIds2();
 });
 
 // Facebook webhook
@@ -44,9 +46,8 @@ app.post('/webhook', function (req, res){
                 case("cmd_subscribers"): 
                     sendMessage(event.sender.id, {text: getUserIds()}); 
                     break;
-                case("cmd_timezone"): 
+                case("cmd_timezone"):
                     getUserAttributes(event.sender.id).then(function(res){
-                        console.error("************cmd ", res);
                         sendMessage(event.sender.id, {text: res.timezone}); 
                     });                                                            
                     break;
@@ -66,7 +67,7 @@ app.post('/webhook', function (req, res){
     res.sendStatus(200);
 });
 
-// Scheduler
+// Scheduler (Everyday at 09_00AM)
 var task = cron.schedule('* * 9 * *', function(){
     console.log('Running sendout');
     doSendout();
@@ -97,11 +98,19 @@ var sendMessage = function(recipientId, message){
     });
 };
 
-// Facebook page with the likes of our app
-var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId;
 // Collects the userId's from the page likes html
 var getUserIds = function(){ 
+    var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId;
+    casper.start(url, function() {
+        this.echo(this.getTitle());
+        console.log('wooo *** ' + this.getTitle());
+    });
+    casper.run();
+};
+
+var getUserIds2 = function(){ 
     var userIds = [];
+    var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId;
     request(url, function (error, response, html) {
     if (!error && response.statusCode == 200) {
         var $ = cheerio.load(html);
@@ -118,13 +127,6 @@ var getUserIds = function(){
     }
     });
 };
-
-// Retrieves the timezone of a user
-function getUserTimezone(userId){
-    getUserAttributes(userId).then(function(res){
-        console.log('getUserTimezone: ' + res.timezone);
-    });
-}
 
 // Retrieves the profile attributes of a user
 var getUserAttributes = function(userId){

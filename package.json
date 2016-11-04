@@ -20,7 +20,8 @@
     "body-parser": "latest",
     "cheerio": "latest",
     "express": "latest",
-    "node-cron": "^1.1.2",
+    "node-cron": "latest",
+    "casperjs": "latest",
     "request": "latest"
   }
 }
