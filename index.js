@@ -46,9 +46,9 @@ app.post('/webhook', function (req, res){
                     break;
                 case("cmd_timezone"): 
                     getUserAttributes(event.sender.id).then(function(res){
-                        console.error("************cmd ", res.timezone);
-                    });                                        
-                    sendMessage(event.sender.id, {text: "Timezone " }); 
+                        console.error("************cmd ", res);
+                        sendMessage(event.sender.id, {text: res.timezone}); 
+                    });                                                            
                     break;
                 case("cmd_stop_cron"): 
                     task.stop();
