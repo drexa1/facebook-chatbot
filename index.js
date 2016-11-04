@@ -3,7 +3,6 @@ var request = require('request');
 var bodyParser = require('body-parser');
 var cron = require('node-cron');
 var cheerio = require('cheerio');
-var casper = require('casper').create();
 
 var app = express();
 app.listen((process.env.PORT || 3000));
