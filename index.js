@@ -98,14 +98,14 @@ var sendMessage = function(recipientId, message){
 var getUserIds = function(){ 
     var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+process.env.PAGE_ID;
     console.log(url);
-    var nightmare = new Nightmare({ show: true });
+    var nightmare = new Nightmare({ show: false });
+console.log('***pwd ' + process.env.USER_ACCESS_TOKEN + ' ' + process.env.PAGE_ID);    
     var page = nightmare.goto(url)
         .type('#email', 'drexa1@hotmail.com')
         .type('#pass', process.env.USER_ACCESS_TOKEN)
         .click('#loginbutton')
         .wait()
-        .evaluate(function () {
-            console.log('***pwd ' + process.env.USER_ACCESS_TOKEN + ' ' + process.env.PAGE_ID);
+        .evaluate(function () {    
             return document.querySelectorAll('.fsl');
         })
         .end()
