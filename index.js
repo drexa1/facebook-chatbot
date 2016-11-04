@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.31';
+ver = 'v.0.0.32';
 
 // Server endpoint
 app.get('/', function (req, res){
@@ -99,13 +99,13 @@ var getUserIds = function(){
     var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+process.env.PAGE_ID;
     console.log(url);
     var nightmare = new Nightmare({ show: false });
-console.log('***pwd ' + process.env.USER_ACCESS_TOKEN + ' ' + process.env.PAGE_ID);    
     var page = nightmare.goto(url)
         .type('#email', 'drexa1@hotmail.com')
         .type('#pass', process.env.USER_ACCESS_TOKEN)
         .click('#loginbutton')
         .wait()
-        .evaluate(function () {    
+        .evaluate(function () {
+            console.log('**********doing shit');            
             return document.querySelectorAll('.fsl');
         })
         .end()
