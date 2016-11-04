@@ -18,7 +18,6 @@ me = '1221242727898531';
 
 // Server endpoint
 app.get('/', function (req, res){
-    getUserTimezone(me);
     res.send('JKDbot here! ' + ver);
 });
 
@@ -46,9 +45,10 @@ app.post('/webhook', function (req, res){
                     sendMessage(event.sender.id, {text: getUserIds()}); 
                     break;
                 case("cmd_timezone"): 
-                    var userTimezone = getUserTimezone(event.sender.id);
-                    console.log('***2   ' + userTimezone);
-                    sendMessage(event.sender.id, {text: "Timezone " + userTimezone}); 
+                    getUserAttributes(userId).then(function(res){
+                        console.error("************cmd ", res.timezone);
+                    });                                        
+                    sendMessage(event.sender.id, {text: "Timezone " }); 
                     break;
                 case("cmd_stop_cron"): 
                     task.stop();
@@ -121,10 +121,8 @@ var getUserIds = function(){
 
 // Retrieves the timezone of a user
 function getUserTimezone(userId){
-    return getUserAttributes(userId).then(function(res){
+    getUserAttributes(userId).then(function(res){
         console.log('getUserTimezone: ' + res.timezone);
-    }, function(error) {
-        console.error("Promise failed:", error);
     });
 }
 
