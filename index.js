@@ -18,6 +18,7 @@ me = '1221242727898531';
 
 // Server endpoint
 app.get('/', function (req, res){
+    getUserTimezone(me);
     res.send('JKDbot here! ' + ver);
 });
 
@@ -120,9 +121,8 @@ var getUserIds = function(){
 
 // Retrieves the timezone of a user
 function getUserTimezone(userId){
-    return userTimezone = getUserAttributes(userId).then(function (res){
+    return getUserAttributes(userId).then(function(res){
         console.log('getUserTimezone: ' + res.timezone);
-        return res.timezone;
     }, function(error) {
         console.error("Promise failed:", error);
     });
