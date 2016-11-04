@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.30';
+ver = 'v.0.0.31';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -100,16 +100,22 @@ var sendMessage = function(recipientId, message){
 
 // Collects the userId's from the page likes html
 var getUserIds = function(){ 
-    var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId;
-    var google = new Nightmare()
-      .goto(url)
-      .wait()
-      .run(function(error, nightmare) {
-        if (error) {
-            return console.log(error);
-        } 
-        console.log('*************** Done!');
-    });
+    var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId+'&access_token='+process.env.PAGE_ACCESS_TOKEN;
+    console.log(url);
+    var nightmare = new Nightmare({ show: false });
+    var page = nightmare.goto(url)
+        .wait()
+        .evaluate(function () {
+            return document.querySelectorAll('a[data-gt]');
+        })
+        .end()
+        .then(function (result) {
+            console.log(result)
+        })
+        .catch(function (error) {
+            console.error('Search failed:', error);
+        });
+    console.log('Nightmare done');
 };
 
 var getUserIds2 = function(){ 
