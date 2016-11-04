@@ -3,6 +3,7 @@ var request = require('request');
 var bodyParser = require('body-parser');
 var cron = require('node-cron');
 var cheerio = require('cheerio');
+var Nightmare = require('nightmare');
 
 var app = express();
 app.listen((process.env.PORT || 3000));
@@ -10,7 +11,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Current version
-ver = 'v.0.0.29';
+ver = 'v.0.0.30';
 // Facebook pageId
 pageId = '1167308473348175';
 // My user on Facebook
@@ -19,7 +20,7 @@ me = '1221242727898531';
 // Server endpoint
 app.get('/', function (req, res){
     res.send('JKDbot here! ' + ver);
-    getUserIds2();
+    getUserIds();
 });
 
 // Facebook webhook
@@ -100,16 +101,20 @@ var sendMessage = function(recipientId, message){
 // Collects the userId's from the page likes html
 var getUserIds = function(){ 
     var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId;
-    casper.start(url, function() {
-        this.echo(this.getTitle());
-        console.log('wooo *** ' + this.getTitle());
+    var google = new Nightmare()
+      .goto(url)
+      .wait()
+      .run(function(error, nightmare) {
+        if (error) {
+            return console.log(error);
+        } 
+        console.log('*************** Done!');
     });
-    casper.run();
 };
 
 var getUserIds2 = function(){ 
     var userIds = [];
-    var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+pageId;
+    
     request(url, function (error, response, html) {
     if (!error && response.statusCode == 200) {
         var $ = cheerio.load(html);

@@ -21,7 +21,7 @@
     "cheerio": "latest",
     "express": "latest",
     "node-cron": "latest",
-    "casperjs": "latest",
+    "nightmare": "latest",
     "request": "latest"
   }
 }
