@@ -2,9 +2,9 @@
   "name": "jkdbot",
   "version": "1.0.0",
   "description": "One of the many principles of JKD philosophy each day",
-  "main": "index.js",
+  "main": "bot.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node bot.js"
   },
   "repository": {
     "type": "git",
