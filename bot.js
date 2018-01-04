@@ -15,7 +15,6 @@ ver = 'v.0.0.33';
 // Server endpoint
 app.get('/', function (req, res){
     res.send('JKDbot here! ' + ver);
-    getUserIds();
 });
 
 // Facebook webhook
@@ -46,14 +45,13 @@ app.post('/webhook', function (req, res){
                         sendMessage(event.sender.id, {text: res.timezone}); 
                     });                                                            
                     break;
+                case("cmd_stop_start"): 
+                    task.start();
+                    break;  
                 case("cmd_stop_cron"): 
                     task.stop();
                     break;
-                case("cmd_stop_restart"): 
-                    task.start();
-                    break;  
-                // Ack to sender
-                default: 
+                default: // Echo to sender
                     sendMessage(event.sender.id, {text: "Message received: " + event.message.text + " by " + event.sender.id});
                     break;
             }
@@ -62,9 +60,9 @@ app.post('/webhook', function (req, res){
     res.sendStatus(200);
 });
 
-// Scheduler (Everyday at 09_00AM)
+// Scheduler (Everyday at 09_00AM) -Check subscriber timezone
 var task = cron.schedule('* * 9 * *', function(){
-    console.log('Running sendout');
+    console.log('Starting sendout');
     doSendout();
 });
 task.start();
@@ -91,41 +89,6 @@ var sendMessage = function(recipientId, message){
             console.log('Error: ', response.body.error);
         }
     });
-};
-
-// Scraps the userId's from the page likes html
-var getUserIds = function(){ 
-    var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+process.env.PAGE_ID;
-    var url = 'https://www.facebook.com/browse/?type=page_fans&page_id='+1167308473348175;
-    var nightmare = new Nightmare({show: true});
-    var page = nightmare.goto(url)
-        .insert('#email', 'drexa1@hotmail.com')
-        .insert('#pass', process.env.USER_ACCESS_TOKEN)
-        .insert('#pass', 'gatito?(&)')
-        .click('#loginbutton')
-    
-        .evaluate(function (){
-            if(document.body.innerHTML)
-                return document.body.innerHTML;
-            else
-                return "Not in page";
-        })
-        .run(function (error, result){
-            if (error) {
-                return console.log(error);
-            }
-            console.log(result);
-            console.log('Done!');
-        }
-    );
-    
-    /*
-        .evaluate(function () {    
-            return document.querySelector('body').innerHTML;
-        })
-        .then(function (result) {
-            console.log(result); 
-        });*/
 };
 
 // Retrieves the profile attributes of a user
